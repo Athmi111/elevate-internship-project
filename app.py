@@ -23,3 +23,24 @@ def fetch_poster(movie_id):
     full_path = f"https://image.tmdb.org/t/p/w500{poster_path}"
     return full_path
 
+
+st.title("Movie Recommendation System")
+
+selected_movie = st.selectbox("Select a movie:", movies['title'].values)
+
+if st.button("Recommend"):
+    recommendations = get_recommendations(selected_movie)
+    st.write("Top 10 recommended movies:")
+
+    # Create a 2x5 grid layout
+    for i in range(0, 10, 5):  # Loop over rows (2 rows, 5 movies each)
+        cols = st.columns(5)  # Create 5 columns for each row
+        for col, j in zip(cols, range(i, i+5)):
+            if j < len(recommendations):
+                movie_title = recommendations.iloc[j]['title']
+                movie_id = recommendations.iloc[j]['movie_id']
+                poster_url = fetch_poster(movie_id)
+                with col:
+                    st.image(poster_url, width=130)
+                    st.write(movie_title)
+
